@@ -107,6 +107,11 @@ static volatile mf1_offline_clone_state_t m_job_state = MF1_OFFLINE_CLONE_IDLE;
 static volatile uint8_t m_job_missing_sectors = 0;
 static volatile bool m_job_request = false;
 
+static void job_set_state(mf1_offline_clone_state_t state, uint8_t missing) {
+    m_job_state = state;
+    m_job_missing_sectors = missing;
+}
+
 void mf1_offline_clone_job_request(void) {
     m_job_request = true;
     // mark as running right away so a host polling the status can tell a
@@ -128,11 +133,6 @@ mf1_offline_clone_state_t mf1_offline_clone_job_state(void) {
 
 uint8_t mf1_offline_clone_job_missing_sectors(void) {
     return m_job_missing_sectors;
-}
-
-static void job_set_state(mf1_offline_clone_state_t state, uint8_t missing) {
-    m_job_state = state;
-    m_job_missing_sectors = missing;
 }
 
 // Map SAK to the matching emulation tag type, 0 if not a Mifare Classic.
